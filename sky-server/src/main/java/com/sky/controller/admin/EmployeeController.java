@@ -95,6 +95,46 @@ public class EmployeeController {
         return Result.success();
     }
 
+    /**
+     * 根据id查找员工
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查找员工")
+    public Result<Employee> getById(@PathVariable("id") Long id){
+        log.info("根据id查找员工：{}",id);
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 修改员工
+     * @param employeeDTO
+     * @return
+     */
+    @PutMapping()
+    @ApiOperation("修改员工信息")
+    public Result<String> update(@RequestBody EmployeeDTO employeeDTO){
+        log.info("修改员工：{}",employeeDTO);
+        // 1. 参数校验
+        if (StringUtils.isBlank(employeeDTO.getUsername())) {
+            return Result.error("用户名不能为空");
+        }
+        if (StringUtils.isBlank(employeeDTO.getName())) {
+            return Result.error("姓名不能为空");
+        }
+        if (StringUtils.isBlank(employeeDTO.getPhone())) {
+            return Result.error("手机号不能为空");
+        }
+        if (StringUtils.isBlank(employeeDTO.getIdNumber())) {
+            return Result.error("身份证号不能为空");
+        }
+        if (employeeDTO.getId() == null) {
+            return Result.error("员工id不能为空");
+        }
+        employeeService.update(employeeDTO);
+        return Result.success();
+    }
+
     @PostMapping()
     public Result<String> save(@RequestBody EmployeeDTO employeeDTO){
         log.info("新增员工：{}",employeeDTO);

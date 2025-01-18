@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
@@ -113,6 +114,33 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build();
         //调用mapper层进行修改
         employeeMapper.update(employee);
+    }
+
+    /**
+     * 修改员工信息
+     * @param employeeDTO
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        //1.将dto转为entity
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        //2.调用mapper层进行修改
+        employeeMapper.update(employee);
+    }
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
+    @Override
+    public Employee getById(Long id) {
+        Employee employee = employeeMapper.getById(id);
+        return employee;
     }
 
 }
