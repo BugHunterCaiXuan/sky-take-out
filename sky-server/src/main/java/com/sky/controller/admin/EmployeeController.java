@@ -4,6 +4,7 @@ import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.BaseException;
 import com.sky.properties.JwtProperties;
@@ -12,6 +13,7 @@ import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +21,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 员工管理
@@ -28,6 +33,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
+@Api(tags = "员工相关接口")
 public class EmployeeController {
 
     @Autowired
@@ -63,6 +69,17 @@ public class EmployeeController {
                 .build();
 
         return Result.success(employeeLoginVO);
+    }
+
+    /*
+    修改员工密码
+     */
+    @PutMapping("/editPassword")
+    @ApiOperation("修改员工密码")
+    public Result<String> editPassword(@RequestBody PasswordEditDTO passwordEditDTO){
+        log.info("修改员工密码：{}",passwordEditDTO);
+        employeeService.editPassword(passwordEditDTO);
+        return Result.success();
     }
 
     //启用，禁用员工账号
@@ -111,9 +128,9 @@ public class EmployeeController {
      * @param employeeDTO
      * @return
      */
-    @PutMapping()
+    @PutMapping
     @ApiOperation("修改员工信息")
-    public Result<String> update(@RequestBody EmployeeDTO employeeDTO){
+    public Result<String> update(@RequestBody EmployeeDTO employeeDTO) throws IOException {
         log.info("修改员工：{}",employeeDTO);
         // 1. 参数校验
         if (StringUtils.isBlank(employeeDTO.getUsername())) {

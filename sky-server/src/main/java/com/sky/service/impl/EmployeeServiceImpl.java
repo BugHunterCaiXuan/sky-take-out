@@ -9,6 +9,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
@@ -65,6 +66,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         //3、返回实体对象
         return employee;
     }
+
+    /*
+    *   修改员工密码
+     */
+
 
     @Override
     /**
@@ -141,6 +147,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee getById(Long id) {
         Employee employee = employeeMapper.getById(id);
         return employee;
+    }
+    /*
+    修改密码:遗留问题，无法从前端获取id,导致mapper中查询的id为null
+     */
+    @Override
+    public void editPassword(PasswordEditDTO passwordEditDTO) {
+        //1.检查用户是否存在
+        Employee employee = employeeMapper.getById(passwordEditDTO.getEmpId());
+        if(employee == null){
+            throw new BaseException("用户不存在");
+        }
+        //2.校验旧密码,旧密码错误，抛出业务异常
+        if(!employee.getPassword().equals(passwordEditDTO.getOldPassword())){
+            throw new BaseException("旧密码错误");
+        }
+        //3.旧密码正确，修改密码
+        employee.setPassword(passwordEditDTO.getNewPassword());
+        employeeMapper.updatePassword(employee);
+
     }
 
 }

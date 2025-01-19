@@ -38,4 +38,7 @@ public interface EmployeeMapper {
 
     @Select("select * from employee where id = #{id}")
     Employee getById(Long id);
+
+    @Update("update employee set password = #{newPassword} where id = #{id}")
+    void updatePassword(Employee employee);
 }
