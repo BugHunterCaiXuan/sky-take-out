@@ -33,8 +33,8 @@ public class DishController {
     @Autowired
     private DishService dishService;
 
-//    @Autowired
-//    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 新增菜品
@@ -47,7 +47,7 @@ public class DishController {
         log.info("新增菜品：{}", dishDTO);
         dishService.saveWithFlavor(dishDTO);
         String key = "dish_" + dishDTO.getCategoryId();
-//        clearRedis(key);
+        clearRedis(key);
         return Result.success();
     }
 
@@ -101,7 +101,7 @@ public class DishController {
     public Result<String> update(@RequestBody DishDTO dishDTO) {
         log.info("更新菜品：{}", dishDTO);
         dishService.updateWithFlavor(dishDTO);
-//        clearRedis("dish_*");
+        clearRedis("dish_*");
         return Result.success();
     }
 
@@ -117,7 +117,7 @@ public class DishController {
         // 1. 启用 0. 停用
         log.info("启用或停用菜品：{}", id);
         dishService.startOrStop(status, id);
-//        clearRedis("dish_*");
+        clearRedis("dish_*");
         return Result.success();
     }
 
@@ -133,8 +133,8 @@ public class DishController {
         return Result.success(dishList);
     }
 
-//    private void clearRedis(String keys) {
-//        Set<String> cacheKeys = redisTemplate.keys(keys);
-//        redisTemplate.delete(cacheKeys);
-//    }
+    private void clearRedis(String keys) {
+        Set<String> cacheKeys = redisTemplate.keys(keys);
+        redisTemplate.delete(cacheKeys);
+    }
 }
