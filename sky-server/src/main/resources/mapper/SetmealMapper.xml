@@ -16,7 +16,7 @@
         where id = #{id}
     </update>
 
-    <select id="pageQuery">
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
         select s.*,c.name categoryName
         from setmeal s
         left join category c
